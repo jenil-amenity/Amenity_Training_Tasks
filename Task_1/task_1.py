@@ -10,8 +10,8 @@ class Task_1 :
             i += 1
 
 s = int(input("Enter a range: "))
-start = time.time()
+start = time.perf_counter()
 Task_1.fibonacci(s)
-print("\nExecution Time >> ",time.time() - start)
+print("\nExecution Time >> ",time.perf_counter() - start)
 
         
