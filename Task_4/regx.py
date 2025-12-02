@@ -19,7 +19,7 @@ class RegxValidation :
         emailmatch = re.findall(r'[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,3}',string)
         print("Email >> ", emailmatch)
         
-        phonematch = re.findall(r'tel[:][6-9][0-9]{6,10}',string)
+        phonematch = re.findall(r'tel:?([6-9][0-9]{6,10})',string)
         print("Contact Numbers >> ", phonematch)
         
         datematch = re.findall(r'duedate:?([0-9]{1,2}[a-zA-Z]{3}[0-9]{4})',string)
