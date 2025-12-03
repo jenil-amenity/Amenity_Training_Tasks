@@ -1,74 +1,302 @@
-## PANDAS TASK LIST
+# Pandas Task List
 
-### Loading & Initial Inspection
+## Table of Contents
+1. [Loading & Initial Inspection](#loading--initial-inspection)
+2. [Data Selection & Indexing](#data-selection--indexing)
+3. [Filtering Data](#filtering-data)
+4. [Data Cleaning & Manipulation](#data-cleaning--manipulation)
+5. [Grouping & Aggregation](#grouping--aggregation)
+6. [Sorting & Ranking](#sorting--ranking)
+7. [Combining DataFrames](#combining-dataframes)
 
-    Load a CSV file (e.g., sales_data.csv) into a Pandas DataFrame.
-    Display the first 7 rows of the DataFrame.
-    Display the last 7 rows of the DataFrame.
-    Find the shape (number of rows and columns) of the DataFrame.
-    List all column names of the DataFrame.
-    Display the data types of each column.
-    Get a descriptive statistical summary for all numerical columns.
-    Get a descriptive statistical summary for all columns (including object/categorical).
-    Check the number of unique values in each column.
+---
 
-### Data Selection & Indexing
+## Loading & Initial Inspection
 
-    Select and display a single column by its name (e.g., 'Product').
-    Select and display multiple specific columns by their names (e.g., 'Product', 'Price', 'Quantity').
-    Select and display the row at index position 3 (the 4th row).
-    Select and display rows from index position 5 to 10.
-    Set a meaningful column (e.g., 'OrderID') as the DataFrame's index.
-    Select and display a specific row using its new index label (e.g., if 'OrderID' 'XYZ123' is an index).
-    Select and display specific rows and columns using .loc[] (e.g., rows with index labels 'A', 'B' and columns 'Product', 'Region').
-    Select and display specific rows and columns using .iloc[] (e.g., rows at index positions 0, 2, 4 and columns at index positions 1, 3).
+### Import Library
+```python
+import pandas as pd
+```
 
-### Filtering Data
+### Load Dataset
+```python
+df = pd.read_csv('sales_data.csv')
+```
 
-    Filter and display all rows where a numerical column (e.g., 'Quantity') is greater than a certain value (e.g., 10).
-    Filter and display all rows where a categorical column (e.g., 'Category') is equal to a specific value (e.g., 'Electronics').
-    Filter and display rows that meet multiple conditions (e.g., 'Region' is 'West' AND 'Price' is less than 50).
-    Filter and display rows where a column's value is one of several specified values (e.g., 'Product' is 'Laptop', 'Mouse', or 'Keyboard').
-    Filter out rows where a specific column has missing values.
+### Basic Inspection Commands
+```python
+# View first 7 rows
+df.head(7)
 
+# View last 7 rows
+df.tail(7)
 
-### Data Cleaning & Manipulation
+# Get DataFrame dimensions
+df.shape
 
-    Identify columns with any missing (NaN) values.
-    Count the total number of missing values in each column.
-    Fill missing values in a specific numerical column with its mean or median.
-    Fill missing values in a specific categorical column with a placeholder like 'Unknown' or the mode.
-    Drop all rows that have any missing values.
-    Drop a specific column by its name.
-    Create a new column by performing an arithmetic operation on two existing numerical columns (e.g., 'TotalPrice' = 'Quantity' * 'Price').
-    Convert a column containing date strings to the datetime data type.
-    Extract the month or year from a datetime column into a new column.
-    Rename one or more columns.
-    Change the data type of a column (e.g., from float to integer, if appropriate).
-    Find and remove duplicate rows from the DataFrame.
-    Apply a custom function to each element in a Series/column (e.g., convert text to uppercase).
+# Get column names
+df.columns
 
+# Get data types
+df.dtypes
 
-### Grouping & Aggregation
+# Statistical summary (numeric columns)
+df.describe()
 
-    Group data by a single column (e.g., 'Category') and calculate the sum of another column (e.g., 'Revenue') for each group.
-    Group data by a single column and calculate the mean of another column.
-    Group data by multiple columns (e.g., 'Region', 'Category') and count the number of occurrences in each group.
-    Find the minimum and maximum values of a numerical column for each group.
-    Calculate the number of unique items in a column for each group (e.g., unique products per category).
-    Get the size of each group after grouping.
-    Use agg() to apply multiple aggregation functions at once after grouping.
+# Statistical summary (all columns)
+df.describe(include='all')
 
+# Count unique values per column
+df.nunique()
+```
 
-### Sorting & Ranking
+---
 
-    Sorting & Ranking:
-    Sort the DataFrame by a single column in ascending order.
-    Sort the DataFrame by a single column in descending order.
-    Sort the DataFrame by multiple columns.
+## Data Selection & Indexing
 
+### Select Single Column
+```python
+df['Product']
+```
 
-### Combining DataFrames (Use multiple small datasets)
+### Select Multiple Columns
+```python
+df[['Product', 'Price', 'Quantity']]
+```
 
-    Concatenate two DataFrames vertically (stacking them).
-    Merge two DataFrames based on a common key column (like a SQL join).
+### Select Row by Position
+```python
+df.iloc[3]
+```
+
+### Select Multiple Rows by Position
+```python
+df.iloc[5:11]
+```
+
+### Set Index
+```python
+df.set_index('OrderID', inplace=True)
+```
+
+### Select Row by Index Label
+```python
+df.loc['ORD019']
+```
+
+### Select Specific Rows and Columns by Label
+```python
+df.loc[['ORD002', 'ORD005'], ['Product', 'Region']]
+```
+
+### Select Specific Rows and Columns by Position
+```python
+df.iloc[[0, 2, 4], [1, 3]]
+```
+
+---
+
+## Filtering Data
+
+### Filter by Numerical Condition
+```python
+# Quantity greater than 10
+filtered_row = df[df['Quantity'] > 10]
+```
+
+### Filter by Categorical Condition
+```python
+# Category equals 'Electronics'
+df.loc[df['Category'] == 'Electronics']
+```
+
+### Filter by Multiple Conditions (AND)
+```python
+# Region is 'West' AND Price is less than 50
+df.loc[(df['Region'] == 'West') & (df['Price'] < 50)]
+```
+
+### Filter by Multiple Values (OR)
+```python
+# Product is 'Laptop', 'Mouse', or 'Keyboard'
+df.loc[(df['Product'] == 'Laptop') | (df['Product'] == 'Mouse') | (df['Product'] == 'Keyboard')]
+```
+
+### Filter Rows with Missing Values
+```python
+df[df['Quantity'].isna()]
+```
+
+---
+
+## Data Cleaning & Manipulation
+
+### Identify Columns with Missing Values
+```python
+df.columns[df.isna().any()]
+```
+
+### Count Missing Values per Column
+```python
+df.isnull().sum()
+```
+
+### Fill Missing Values (Numerical)
+```python
+# Fill with mean
+value = df['Price'].mean()
+df['Price'] = df['Price'].fillna(value)
+```
+
+### Fill Missing Values (Categorical)
+```python
+# Fill with placeholder
+df['Category'] = df['Category'].fillna("Unknown")
+```
+
+### Drop Rows with Missing Values
+```python
+df.dropna()
+```
+
+### Drop Column
+```python
+df.drop(columns=['Region'], inplace=True)
+```
+
+### Create New Column from Arithmetic Operation
+```python
+df['TotalPrice'] = df['Quantity'] * df['Price']
+```
+
+### Convert Column to Datetime
+```python
+df['OrderDate'] = pd.to_datetime(df['OrderDate'])
+```
+
+### Extract Month from Datetime
+```python
+df['OrderMonth'] = df['OrderDate'].dt.month
+```
+
+### Rename Columns
+```python
+df.rename(columns={'Price': 'UnitPrice', 'Quantity': 'UnitsSold'}, inplace=True)
+```
+
+### Change Data Type
+```python
+df['UnitPrice'] = df['UnitPrice'].astype(int)
+```
+
+### Remove Duplicates
+```python
+df.drop_duplicates(inplace=True)
+```
+
+### Apply Custom Function
+```python
+# Convert to uppercase
+df['Product'] = df['Product'].apply(lambda x: x.upper())
+```
+
+---
+
+## Grouping & Aggregation
+
+### Group by Single Column and Sum
+```python
+df.groupby('Category')['UnitPrice'].sum()
+```
+
+### Group by Single Column and Calculate Mean
+```python
+df.groupby('Category')['UnitPrice'].mean()
+```
+
+### Group by Multiple Columns and Count
+```python
+df.groupby(['Category', 'UnitPrice']).size()
+```
+
+### Find Min and Max per Group
+```python
+df.groupby(['Category', 'UnitPrice']).agg(['min', 'max'])
+```
+
+### Count Unique Items per Group
+```python
+df.groupby('Category')['Product'].nunique()
+```
+
+### Get Group Sizes
+```python
+df.groupby('Category').size()
+```
+
+### Apply Multiple Aggregations
+```python
+df.groupby('Category').agg({'UnitPrice': 'mean', 'TotalPrice': 'max'})
+```
+
+---
+
+## Sorting & Ranking
+
+### Sort by Single Column (Ascending)
+```python
+df.sort_values('UnitPrice')
+```
+
+### Sort by Single Column (Descending)
+```python
+df.sort_values('UnitsSold', ascending=False)
+```
+
+### Sort by Multiple Columns
+```python
+df.sort_values(by=['UnitPrice', 'UnitsSold'], ascending=True)
+```
+
+---
+
+## Combining DataFrames
+
+### Concatenate Horizontally (Side by Side)
+```python
+df1 = pd.DataFrame({'ID': [1, 2], 'Name': ['A', 'B']})
+df2 = pd.DataFrame({'ID': [3, 4], 'Name': ['C', 'D']})
+dsc = pd.concat([df1, df2], axis=1)
+```
+
+### Concatenate Vertically (Stacking)
+```python
+df3 = pd.DataFrame({'ID': [5, 6], 'Name': ['E', 'F']})
+df4 = pd.DataFrame({'ID': [7, 8], 'Name': ['G', 'H']})
+df5 = pd.concat([df3, df4], axis=0)
+```
+
+### Merge DataFrames (Inner Join)
+```python
+df_a = pd.DataFrame({'ID': [1, 2, 3], 'ValueA': ['X', 'Y', 'Z']})
+df_b = pd.DataFrame({'ID': [2, 3, 4], 'ValueB': ['P', 'Q', 'R']})
+df_c = pd.merge(df_a, df_b, on='ID', how='inner')
+```
+
+---
+
+## Common Parameters
+
+### `inplace` Parameter
+- `inplace=True`: Modifies the DataFrame directly
+- `inplace=False`: Returns a new DataFrame (default)
+
+### `axis` Parameter
+- `axis=0`: Operations along rows (vertical)
+- `axis=1`: Operations along columns (horizontal)
+
+### Merge `how` Parameter
+- `how='inner'`: Returns only matching rows
+- `how='outer'`: Returns all rows from both DataFrames
+- `how='left'`: Returns all rows from left DataFrame
+- `how='right'`: Returns all rows from right DataFrame
