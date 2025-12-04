@@ -16,22 +16,24 @@ from .serializers import RegisterSerializer, UserSerializer, EditProfileSerializ
 
 User = get_user_model()
 
-class RegisterView(generics.CreateAPIView):
-    serializer_class = RegisterSerializer 
+class RegisterView(APIView):
     permission_classes = [AllowAny]
     
     def perform_create(self, serializer):
-        user = serializer.save()
-        subject = "Verify your account"
-        message = F"Your OTP code is: {user.otp}"
+        serializer = RegisterSerializer (data=request.data)
         
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
-        
-        return user
-    
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return Response({"detail": "Account Created Please Check your email for OTP to verifiy you account"}, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            user = serializer.save()
+             
+            subject = "Verify your account"
+            message = f"Your OTP code is: {user.otp}"
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+            
+            return Response({
+                "detail":"User registered successfully! Please verify your email using the OTP sent."
+            },status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]
@@ -51,7 +53,6 @@ class VerifyOTPView(APIView):
         if user.otp != otp:
             return Response({"error":"Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Mark user as verified **and** activate the account so they can log in
         user.is_verified = True
         user.is_active = True
         user.otp = None
@@ -97,20 +98,42 @@ class LoginView(APIView):
             "last_name": user.last_name
         }, status=status.HTTP_200_OK)
     
-class MeView(generics.RetrieveAPIView):
-    serializer_class = UserSerializer
+class MeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
-    def get_object(self):
-        return self.request.user
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 class EditProfileView(generics.UpdateAPIView):
-    serializer_class = EditProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-    def get_object(self):
-        return self.request.user
+    def put(self, request):
+        user = request.user
+        serializer = EditProfileSerializer(user, data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "detail":"Profile updated successfully"
+            }, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    def patch(self, request):
+        user = request.user
+        serializer = EditProfileSerializer(user, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "detail":"Profile updated successfully"
+            }, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class DeleteUserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
