@@ -107,7 +107,7 @@ class MeView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-class EditProfileView(generics.UpdateAPIView):
+class EditProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
     def put(self, request):
