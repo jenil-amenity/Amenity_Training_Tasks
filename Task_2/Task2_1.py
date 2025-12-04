@@ -48,10 +48,10 @@ class pyramids:
                 print('*',end='')
             print()
             
-            
-pyramids.rev_pyra(5)
-pyramids.pyra(5)
-pyramids.right_pyra(5)
-pyramids.half_triangle(5)
-n = int(input("Enter the number of rows >> "))
-pyramids.diamond(n)
+if __name__ == "__main__" :
+    pyramids.rev_pyra(5)
+    pyramids.pyra(5)
+    pyramids.right_pyra(5)
+    pyramids.half_triangle(5)
+    n = int(input("Enter the number of rows >> "))
+    pyramids.diamond(n)
