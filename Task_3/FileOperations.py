@@ -3,86 +3,51 @@ import shutil
 import csv
 import json
 
-# copy file 
-# src = 'data.csv'
-# des = 'test2.txt'
-# res = shutil.copyfile(src, des)
-# print(res)
+def copy_file(src, des):
+    return shutil.copyfile(src, des)
 
-#copy folder with files
-# src = r'folder1/test2.txt'
-# des = r'folder3'
+def copy_folder_with_files(src, des):
+    os.makedirs(des, exist_ok=True)
+    return shutil.copy2(src, des)
 
-# os.makedirs(des, exist_ok=True)
+def copy_nested_folders(src, des):
+    return shutil.copytree(src, des)
 
-# des_path= shutil.copy2(src, des)
-# print(f"Copied to >> {des_path}")
+def read_csv(path):
+    with open(path, "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            print(" | ".join(row))
 
-# Copy nested folders
+def write_csv(path, row):
+    with open(path, "a", newline="") as f:
+        f.write(row)
 
-# src = 'folder2'
-# des = 'folder5'
+def read_text(path):
+    with open(path, "r") as f:
+        return f.read()
 
-# try:
-#     des_path= shutil.copytree(src, des)
-#     print(f"Copied to >> {des_path}")
-# except Exception as e:
-#     print(e)
+def write_text(path, text):
+    with open(path, "a") as f:
+        f.write(text)
 
-#copy Folder
-# src = 'folder4'
-# des = 'folder6'
+def write_json(path, data):
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
 
-# try:
-#     des_path= shutil.copytree(src, des)
-#     print(f"Copied to >> {des_path}")
-# except Exception as e:
-#     print(e)
-
-# csv File RW   
-# file = open('data.csv','r')
-# reader = csv.reader(file)
-# for row in reader:
-#     print(" | ".join(row))
-# file.close()
-
-# CSV WRITE
-# with open('data.csv',"a") as f:
-#     f.write("Joseph,39,India")
-
-# with open('data.csv',"r") as f:
-#     print(f.read())
-
-# Text File READ
-# file = open('test.txt','r')
-# print(file.read())
-# file.close()
-
-# TEXT FILE READ
-# with open("test.txt", "a") as wt:
-#     wt.writelines("Steve Harington")
-
-# with open('test.txt',"r") as f:
-#     print(f.read())
+def read_json(path):
+    with open(path, "r") as f:
+        return json.load(f)
 
 
-# # JSON file read
-# file = open('tata.json')
-# rjson = json.load(file)
-# print(json.dumps(rjson, indent=5))
-# file.close()
+if __name__ == "__main__":
+    data = {
+        "id": "2",
+        "name": "Suresh",
+        "Age": "21"
+    }
 
-#JSON write
-data = {
-    "id": "2",
-    "name": "Suresh",
-    "Age":"21"
-}
-with open("tata.json", "w") as jw:
-    json.dump(data, jw, indent=2)
+    write_json("tata.json", data)
+    result = read_json("tata.json")
 
-# Read it back
-with open("tata.json") as jr:
-    rjson = json.load(jr)
-    print(json.dumps(rjson, indent=2))
-    
+    print(json.dumps(result, indent=2))
