@@ -8,10 +8,8 @@ class Task_1 :
             print(j)
             j, k = k, j + k
             i += 1
-
-s = int(input("Enter a range: "))
-start = time.perf_counter()
-Task_1.fibonacci(s)
-print("\nExecution Time >> ",time.perf_counter() - start)
-
+if __name__ == "__main__" :
+    s = int(input("Enter a range: "))
+    start = time.perf_counter()
+    Task_1.fibonacci(s)
         
