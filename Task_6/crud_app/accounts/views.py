@@ -14,34 +14,43 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer, UserSerializer, EditProfileSerializer, EmailLoginSerializer
 
+# Get the custom user model
 User = get_user_model()
 
+# View for user registration
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     
+    # Handle POST request for user registration
     def perform_create(self, serializer):
         serializer = RegisterSerializer (data=request.data)
         
+        # Validate the serializer
         if serializer.is_valid():
             user = serializer.save()
-             
+            
+            # Send OTP email 
             subject = "Verify your account"
             message = f"Your OTP code is: {user.otp}"
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
             
+            # Return success response
             return Response({
                 "detail":"User registered successfully! Please verify your email using the OTP sent."
             },status=status.HTTP_201_CREATED)
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+# View for OTP verification
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]
     
+    # Handle POST request for OTP verification
     def post(self, request):
         email = request.data.get('email')
         otp = request.data.get('otp')
         
+        #
         if not email or not otp:
             return Response({"error":"Email and OTP are requires"}, status=status.HTTP_404_NOT_FOUND)
 

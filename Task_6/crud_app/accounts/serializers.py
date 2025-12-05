@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+# Serializer for user registration
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
@@ -18,22 +19,26 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password', 'password2','email', 'first_name', 'last_name', 'phone', 'profile_pic']
     
+    # Custom validation for email and password
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError({"email":"Email id already exists"})
         return value
     
+    # Custom password validation
     def validate_password(self, value):
         pattern = r'^(?=.*[0-9])(?=.*[a-z])(?=.*[\W_]).{8,16}$'
         if not re.match(pattern, value):
             raise serializers.ValidateErrors("Password must be 8-16 characters long, include at least one lowercase letter, one digit, and one special character.")
         return value
-            
+    
+    # Cross-field validation for matching passwords    
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({'password':"Password Field didn't match"})
         return attrs
     
+    # Create method to create user instance
     def create(self, validated_data):
         validated_data.pop('password2')
         otp = str(random.randint(100000, 999999))
@@ -46,23 +51,27 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         user.save()
         return user    
-    
+
+# Serializer for editing user profile
 class EditProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'phone', 'profile_pic']
-        
+    
+    # Custom validation for email uniqueness    
     def validate_email(self, value):
         user = self.context['request'].user
         if User.objects.exclude(id = user.id).filter(email= value).exists():
             raise serializers.ValidationError({"email":"Email id already exists"})
         return value
-    
+
+# Serializer for user details  
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
         
+# Serializer for email login   
 class EmailLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, required=True)
