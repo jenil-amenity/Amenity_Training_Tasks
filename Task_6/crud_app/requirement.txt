@@ -1,4 +1,4 @@
 Django==5.2.9
-djangorestframework==3.16.1
-djangorestframework-simplejwt==6.3.0
+djangorestframework
+djangorestframework-simplejwt
 
