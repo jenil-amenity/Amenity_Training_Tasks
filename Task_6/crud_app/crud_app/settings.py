@@ -52,8 +52,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "jenil.z@amenitytech.ai"
-EMAIL_HOST_PASSWORD = "Amenity@1234"
+EMAIL_HOST_USER = "xyz123@gmail.com"
+EMAIL_HOST_PASSWORD = "tester@1234"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
