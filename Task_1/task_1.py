@@ -1,0 +1,15 @@
+#0 1 1 2 3 5 8 13 ...
+import time
+class Task_1 :
+    def fibonacci(n):
+        j, k = 0, 1
+        i=0
+        while i <= n :
+            print(j)
+            j, k = k, j + k
+            i += 1
+if __name__ == "__main__" :
+    s = int(input("Enter a range: "))
+    start = time.perf_counter()
+    Task_1.fibonacci(s)
+        
