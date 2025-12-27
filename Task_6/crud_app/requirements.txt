@@ -1,0 +1,13 @@
+Django==5.2.9
+djangorestframework
+django-cors-headers
+django-rest-passwordreset
+djangorestframework-simplejwt
+python-dotenv
+Pillow
+gunicorn>=21.2.0
+psycopg2-binary
+whitenoise
+
+
+

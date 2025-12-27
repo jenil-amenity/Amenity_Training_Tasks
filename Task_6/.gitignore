@@ -1,0 +1,36 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Django database
+db.sqlite3
+
+# Media uploads
+media/
+
+# Env file
+.env
+.env.*
+
+
+# Virtual environments
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+Task_6/crud_app/utils/old_responses.py
+
+# Docker volumes data
+postgres_data/
+media_data/
+static_data/
+
+# Ngrok config (if contains token)
+.ngrok2/
+.ngrok/

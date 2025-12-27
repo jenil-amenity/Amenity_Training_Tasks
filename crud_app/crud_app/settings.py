@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+<<<<<<< Updated upstream:crud_app/crud_app/settings.py
+=======
+from corsheaders.defaults import default_headers
+>>>>>>> Stashed changes:Task_6/crud_app/crud_app/settings.py
 import os
 
 load_dotenv()
@@ -33,6 +37,7 @@ DEBUG = os.getenv("DEBUG") == "True"
 # Application definition
 
 INSTALLED_APPS = [
+<<<<<<< Updated upstream:crud_app/crud_app/settings.py
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,12 +50,40 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'accounts.apps.AccountsConfig',
     'crud_app',
+=======
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "django_rest_passwordreset",
+    "accounts.apps.AccountsConfig",
+    "corsheaders",
+    "crud_app",
+>>>>>>> Stashed changes:Task_6/crud_app/crud_app/settings.py
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = "accounts.CustomUser"
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "ngrok-skip-browser-warning",
+]
 
 # Testing email backend
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+<<<<<<< Updated upstream:crud_app/crud_app/settings.py
 
 # Live Email Backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -60,12 +93,33 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+=======
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# Live Email Backend
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+
+ALLOWED_HOSTS = [
+    "192.168.1.111",  # your LAN IP
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    "unheuristic-chelsea-unschooled.ngrok-free.dev",
+    "subhumid-continuately-tiana.ngrok-free.dev",
+]
+>>>>>>> Stashed changes:Task_6/crud_app/crud_app/settings.py
+
+
+DEFAULT_FROM_EMAIL = "EMAIL_HOST_USER"
+
+<<<<<<< Updated upstream:crud_app/crud_app/settings.py
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split(",")
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
 
@@ -102,37 +156,93 @@ CORS_ALLOW_HEADERS = [
     "origin",
     "user-agent",
     "x-csrftoken",
+=======
+# CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split(",")
+
+# CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://192.168.1.111",  # your LAN IP
 ]
 
-ROOT_URLCONF = 'crud_app.urls'
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+# print("CORS_ALLOWED_ORIGINS:", CORS_ALLOWED_ORIGINS)
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+>>>>>>> Stashed changes:Task_6/crud_app/crud_app/settings.py
+]
+
+WSGI_APPLICATION = "crud_app.wsgi.application"
+
+ROOT_URLCONF = "crud_app.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'crud_app.wsgi.application'
+WSGI_APPLICATION = "crud_app.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+<<<<<<< Updated upstream:crud_app/crud_app/settings.py
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / os.getenv("DATABASE_NAME"),
+=======
+# Check if running in Docker
+if os.getenv("DOCKER_CONTAINER"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": "db",  # Docker service name
+            "PORT": "5432",
+        }
     }
-}
-
+else:
+    # Local development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB", "crud"),
+            "USER": os.getenv("POSTGRES_USER", "cuser"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "user123"),
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+>>>>>>> Stashed changes:Task_6/crud_app/crud_app/settings.py
+    }
 
 
 # Password validation
@@ -140,16 +250,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -157,9 +267,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -169,24 +279,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 

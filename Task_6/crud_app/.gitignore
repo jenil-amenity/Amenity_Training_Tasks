@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+/media/
+Task_6/crud_app/utils/old_responses.py

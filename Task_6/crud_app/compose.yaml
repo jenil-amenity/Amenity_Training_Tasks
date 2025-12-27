@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: crud
+      POSTGRES_USER: cuser
+      POSTGRES_PASSWORD: user123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cuser -d crud"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: .
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             gunicorn crud_app.wsgi:application --bind 0.0.0.0:8000 --timeout 120"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      EMAIL_PORT: 587
+      DB_HOST: db
+      DB_PORT: 5432
+      DOCKER_CONTAINER: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - media_data:/app/media
+      - static_data:/app/staticfiles
+
+  ngrok:
+    image: ngrok/ngrok
+    command: http server:8000
+    depends_on:
+      - server
+    ports:
+      - "4040:4040"
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+
+volumes:
+  postgres_data:
+  media_data:
+  static_data:
