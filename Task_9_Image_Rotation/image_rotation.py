@@ -3,9 +3,10 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def image_rotation(path):
 
-    img = cv.imread(img_path)
+    img = cv.imread(path)
 
     # converting image to RGB
     img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
@@ -76,9 +77,6 @@ def image_rotation(path):
     plt.show()
 
 
-
-img_path = input("Enter Image Path >> ")
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
+    img_path = input("Enter Image Path >> ")
     image_rotation(img_path)
